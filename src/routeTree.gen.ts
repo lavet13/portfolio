@@ -9,50 +9,140 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AboutRouteImport } from './routes/about'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as BioIndexRouteImport } from './routes/bio/index'
+import { Route as DissIndexRouteImport } from './routes/diss/index'
+import { Route as IndIndexRouteImport } from './routes/ind/index'
+import { Route as LibraryIndexRouteImport } from './routes/library/index'
+import { Route as LinksIndexRouteImport } from './routes/links/index'
 
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BioIndexRoute = BioIndexRouteImport.update({
+  id: '/bio/',
+  path: '/bio/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DissIndexRoute = DissIndexRouteImport.update({
+  id: '/diss/',
+  path: '/diss/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndIndexRoute = IndIndexRouteImport.update({
+  id: '/ind/',
+  path: '/ind/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryIndexRoute = LibraryIndexRouteImport.update({
+  id: '/library/',
+  path: '/library/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LinksIndexRoute = LinksIndexRouteImport.update({
+  id: '/links/',
+  path: '/links/',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/about': typeof AboutRoute
+  '/': typeof IndexRoute
+  '/bio/': typeof BioIndexRoute
+  '/diss/': typeof DissIndexRoute
+  '/ind/': typeof IndIndexRoute
+  '/library/': typeof LibraryIndexRoute
+  '/links/': typeof LinksIndexRoute
 }
 export interface FileRoutesByTo {
-  '/about': typeof AboutRoute
+  '/': typeof IndexRoute
+  '/bio': typeof BioIndexRoute
+  '/diss': typeof DissIndexRoute
+  '/ind': typeof IndIndexRoute
+  '/library': typeof LibraryIndexRoute
+  '/links': typeof LinksIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/about': typeof AboutRoute
+  '/': typeof IndexRoute
+  '/bio/': typeof BioIndexRoute
+  '/diss/': typeof DissIndexRoute
+  '/ind/': typeof IndIndexRoute
+  '/library/': typeof LibraryIndexRoute
+  '/links/': typeof LinksIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/about'
+  fullPaths: '/' | '/bio/' | '/diss/' | '/ind/' | '/library/' | '/links/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/about'
-  id: '__root__' | '/about'
+  to: '/' | '/bio' | '/diss' | '/ind' | '/library' | '/links'
+  id: '__root__' | '/' | '/bio/' | '/diss/' | '/ind/' | '/library/' | '/links/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  AboutRoute: typeof AboutRoute
+  IndexRoute: typeof IndexRoute
+  BioIndexRoute: typeof BioIndexRoute
+  DissIndexRoute: typeof DissIndexRoute
+  IndIndexRoute: typeof IndIndexRoute
+  LibraryIndexRoute: typeof LibraryIndexRoute
+  LinksIndexRoute: typeof LinksIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bio/': {
+      id: '/bio/'
+      path: '/bio'
+      fullPath: '/bio/'
+      preLoaderRoute: typeof BioIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/diss/': {
+      id: '/diss/'
+      path: '/diss'
+      fullPath: '/diss/'
+      preLoaderRoute: typeof DissIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ind/': {
+      id: '/ind/'
+      path: '/ind'
+      fullPath: '/ind/'
+      preLoaderRoute: typeof IndIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library/': {
+      id: '/library/'
+      path: '/library'
+      fullPath: '/library/'
+      preLoaderRoute: typeof LibraryIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/links/': {
+      id: '/links/'
+      path: '/links'
+      fullPath: '/links/'
+      preLoaderRoute: typeof LinksIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  AboutRoute: AboutRoute,
+  IndexRoute: IndexRoute,
+  BioIndexRoute: BioIndexRoute,
+  DissIndexRoute: DissIndexRoute,
+  IndIndexRoute: IndIndexRoute,
+  LibraryIndexRoute: LibraryIndexRoute,
+  LinksIndexRoute: LinksIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
