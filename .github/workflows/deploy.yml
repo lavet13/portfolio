@@ -41,6 +41,8 @@ jobs:
         run: yarn install --immutable
       - name: Build
         run: yarn build
+        env:
+          SITE_URL: https://lavet13.github.io/portfolio/   # env: - sets variables for this step's process only
       - name: Setup Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
       - name: Upload artifact

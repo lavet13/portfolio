@@ -1,111 +1,134 @@
+@import "tailwindcss";
+@import "@fontsource-variable/golos-text";
+@import "@fontsource-variable/jetbrains-mono";
+
+/*
+ * Palette: cool document paper, ink-navy text, and the violet of a Russian
+ * office stamp (фиолетовая печать) as the one accent. Every text colour is
+ * >= 5.5:1 against both backgrounds, in both themes.
+ *
+ * Dark mode needs no JS: prefers-color-scheme applies it, and an explicit
+ * choice (.light / .dark on <html>, set by the inline script in index.html)
+ * overrides the system setting.
+ */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  --paper: #f2f4f7;
+  --surface: #ffffff;
+  --ink: #172033;
+  --muted: #566074;
+  --rule: #d3d9e2;
+  --stamp: #4a36c4;
+  --ok: #13704a;
+  color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
+  :root:not(.light) {
+    --paper: #0e1420;
+    --surface: #151d2c;
+    --ink: #e6eaf2;
+    --muted: #98a3ba;
+    --rule: #28334a;
+    --stamp: #a496ff;
+    --ok: #45d392;
+    color-scheme: dark;
   }
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+:root.dark {
+  --paper: #0e1420;
+  --surface: #151d2c;
+  --ink: #e6eaf2;
+  --muted: #98a3ba;
+  --rule: #28334a;
+  --stamp: #a496ff;
+  --ok: #45d392;
+  color-scheme: dark;
 }
 
-body {
-  margin: 0;
+@theme inline {
+  --color-*: initial;
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-rule: var(--rule);
+  --color-stamp: var(--stamp);
+  --color-ok: var(--ok);
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  --font-sans: "Golos Text Variable", "Golos Text", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
+
+  /* Classical scale (Bringhurst): 14 / 17 / 21 / 28 / 36 / 48, plus the display name */
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.5;
+  --text-base: 1.0625rem;
+  --text-base--line-height: 1.65;
+  --text-lg: 1.3125rem;
+  --text-lg--line-height: 1.5;
+  --text-xl: 1.75rem;
+  --text-xl--line-height: 1.25;
+  --text-2xl: 2.25rem;
+  --text-2xl--line-height: 1.15;
+  --text-3xl: 3rem;
+  --text-3xl--line-height: 1.05;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
+@layer base {
+  html {
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-text-size-adjust: 100%;
+  }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+  body {
+    @apply font-sans text-base antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--stamp) 25%, transparent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--stamp);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  a {
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
   }
 }
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
+
+@layer components {
+  /* Long-form text (реферат, bio): measure capped at ~68 characters */
+  .prose-ru {
+    max-width: 68ch;
+    hyphens: auto;
+  }
+  .prose-ru h2 {
+    @apply mt-14 mb-4 text-xl font-semibold tracking-tight;
+  }
+  .prose-ru h3 {
+    @apply mt-8 mb-2 text-lg font-semibold;
+  }
+  .prose-ru p {
+    @apply my-4;
+  }
+  .prose-ru a {
+    color: var(--stamp);
   }
 }
-p {
-  margin: 0;
-}
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
