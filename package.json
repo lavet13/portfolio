@@ -13,7 +13,6 @@
     "@fontsource-variable/golos-text": "^5.3.0",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@tanstack/react-router": "^1.170.45",
-    "motion": "^14.3.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
