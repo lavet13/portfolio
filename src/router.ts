@@ -12,7 +12,14 @@ type MakeRouterOpts = {
  * so both sides produce the same tree and options; each passes its own history/basepath.
  */
 export function makeRouter(opts: MakeRouterOpts = {}) {
-  return createRouter({ routeTree, trailingSlash: "always", ...opts });
+  return createRouter({
+    routeTree,
+    trailingSlash: "always",
+    // browser-native View Transitions: snapshot the old page, wait until the new one
+    // has rendered, then cross-fade. Unsupported browsers just switch instantly.
+    defaultViewTransition: true,
+    ...opts,
+  });
   // trailingSlash 'always' - links become /bio/ (the directory form), so the server never needs the /bio -> /bio/ redirect hop
 }
 

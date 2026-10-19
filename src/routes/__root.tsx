@@ -1,16 +1,8 @@
-import { HeadContent, Outlet, createRootRoute, useRouterState } from "@tanstack/react-router";
-import { MotionConfig, motion } from "motion/react";
-import { useEffect } from "react";
+import { HeadContent, Outlet, createRootRoute } from "@tanstack/react-router";
 import { EndpointNav } from "../components/endpoint-nav";
 import { RequestLine } from "../components/request-line";
 import { ThemeToggle } from "../components/theme-toggle";
 import { headFor, person } from "../content/site";
-
-// false until the first client render has committed. The prerendered HTML and the first
-// client render must look identical, so only later navigations animate.
-// Module scope, not a ref: the React lint forbids reading ref.current during render, and nothing
-// needs to re-render when this flips.
-let firstRenderDone = false;
 
 export const Route = createRootRoute({
   head: () => headFor("/"),
@@ -19,14 +11,8 @@ export const Route = createRootRoute({
 });
 
 function RootComponent() {
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-  useEffect(() => {
-    firstRenderDone = true;
-  }, []);
-
   return (
-    // reducedMotion="user": Motion skips transform animations when the OS asks for less motion
-    <MotionConfig reducedMotion="user">
+    <>
       <HeadContent />
       <div className="min-h-dvh">
         <header className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 text-sm">
@@ -48,15 +34,10 @@ function RootComponent() {
 
           <main className="min-w-0">
             <RequestLine />
-            <motion.div
-              key={pathname}
-              initial={firstRenderDone ? { opacity: 0, y: 6 } : false}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
-              className="mt-10"
-            >
+            {/* view-transition-name gives the page its own cross-fade (see index.css) */}
+            <div className="mt-10 [view-transition-name:page]">
               <Outlet />
-            </motion.div>
+            </div>
           </main>
         </div>
 
@@ -66,7 +47,7 @@ function RootComponent() {
           </a>
         </footer>
       </div>
-    </MotionConfig>
+    </>
   );
 }
 
