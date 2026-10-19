@@ -1,13 +1,12 @@
 import { useRouter, useRouterState } from "@tanstack/react-router";
-import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
 /**
- * The site's one signature motion: every navigation is shown as the HTTP
- * exchange it stands for, "GET /bio/  200 OK  14 ms". The time is real:
- * measured from the router's onBeforeNavigate to onRendered. On the first
- * (prerendered) load there is no client navigation to time, so no ms is shown
- * and nothing animates; the static HTML and the first client render match.
+ * The site's one signature detail: every navigation is shown as the HTTP
+ * exchange it stands for, "GET /bio/  200 OK  14 мс". The time is real:
+ * measured from the router's onBeforeNavigate to onRendered. The first
+ * (prerendered) load has no client navigation to time, so no ms is shown and
+ * nothing animates; the static HTML and the first client render match.
  */
 export function RequestLine() {
   const router = useRouter();
@@ -34,19 +33,12 @@ export function RequestLine() {
     <p className="flex items-baseline gap-4 font-mono text-sm" aria-live="polite">
       <span className="text-stamp">GET</span>
       <span className="text-ink">{pathname}</span>
-      <AnimatePresence mode="popLayout" initial={false}>
-        <motion.span
-          key={pathname}
-          className="text-ok"
-          initial={{ opacity: 0, x: -8 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.25, ease: [0.2, 0.8, 0.2, 1] }}
-        >
-          200 OK
-          {ms !== null && <span className="ml-4 text-muted">{ms} мс</span>}
-        </motion.span>
-      </AnimatePresence>
+      {/* key remounts the span per navigation, restarting its CSS animation;
+          the class is only added once a client navigation has been timed */}
+      <span key={pathname} className={`text-ok ${ms === null ? "" : "animate-status-in"}`}>
+        200 OK
+        {ms !== null && <span className="ml-4 text-muted">{ms} мс</span>}
+      </span>
     </p>
   );
 }
