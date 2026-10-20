@@ -12,7 +12,6 @@ export function Fill({ children }: { children: string }) {
             key={i}
             data-todo=""
             className="rounded-sm bg-stamp/10 px-1 text-stamp decoration-stamp/50 decoration-dashed underline"
-            title="Заполнить в src/content/site.ts"
           >
             {part.slice(2, -2)}
           </span>

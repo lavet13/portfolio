@@ -25,8 +25,6 @@ const router = makeRouter({ basepath });
 
 await router.load(); // load the matched route's lazy chunk first, so the first render isn't the empty Suspense fallback
 
-const root = document.getElementById("root")!;
-
 const App = (
   <StrictMode>
     <RouterProvider router={router} />
@@ -35,5 +33,7 @@ const App = (
 
 // [data-prerendered] - CSS attribute selector: every element carrying that attribute
 document.querySelectorAll("[data-prerendered]").forEach((el) => el.remove());
+
+const root = document.getElementById("root")!;
 
 createRoot(root).render(App);
