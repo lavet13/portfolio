@@ -47,7 +47,8 @@
 }
 
 @theme inline {
-  --color-*: initial;
+  --color-*: initial; /* delete ALL default colors (red-500, slate-900…): only your palette exists */
+  /* namespace --color-* → text-ink, bg-ink, border-ink, ring-ink, decoration-ink… */
   --color-paper: var(--paper);
   --color-surface: var(--surface);
   --color-ink: var(--ink);
@@ -58,10 +59,22 @@
   --color-transparent: transparent;
   --color-current: currentColor;
 
+  /*
+    Namespace        Utilities generated
+    --color-*        text-…, bg-…, border-…, ring-…, fill-…
+    --font-*         font-sans, font-mono
+    --text-*         text-sm… (font size); the --text-sm--line-height companion sets its line height
+    --animate-*      animate-status-in; @keyframes inside @theme are emitted only if the animation is used
+*/
+
   --font-sans: "Golos Text Variable", "Golos Text", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
+  --font-mono:
+    "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
 
   /* Classical scale (Bringhurst): 14 / 17 / 21 / 28 / 36 / 48, plus the display name */
+  /* The --text-* values replace Tailwind’s default font sizes with
+   * typographic scale (14/17/21/28/36/48 px at the default 16 px root size).
+  */
   --text-sm: 0.875rem;
   --text-sm--line-height: 1.5;
   --text-base: 1.0625rem;
@@ -77,7 +90,10 @@
 
   --animate-status-in: status-in 250ms cubic-bezier(0.2, 0.8, 0.2, 1);
   @keyframes status-in {
-    from { opacity: 0; transform: translateX(-8px); }
+    from {
+      opacity: 0;
+      transform: translateX(-8px);
+    }
   }
 }
 
@@ -85,10 +101,12 @@
   html {
     background: var(--paper);
     color: var(--ink);
+    /* text-size-adjust: stops iOS Safari enlarging text when the phone is turned sideways */
     -webkit-text-size-adjust: 100%;
   }
 
   body {
+    /* @apply: copy those utilities' declarations into this rule; antialiased = thinner font smoothing on macOS */
     @apply font-sans text-base antialiased;
     text-rendering: optimizeLegibility;
   }
@@ -97,6 +115,7 @@
     background: color-mix(in oklab, var(--stamp) 25%, transparent);
   }
 
+  /* the focus ring appears only for keyboard focus, not for mouse clicks */
   :focus-visible {
     outline: 2px solid var(--stamp);
     outline-offset: 3px;
@@ -112,8 +131,8 @@
 @layer components {
   /* Long-form text (реферат, bio): measure capped at ~68 characters */
   .prose-ru {
-    max-width: 68ch;
-    hyphens: auto;
+    max-width: 68ch; /* ch is the width of the “0” glyph, so about 68 characters per line, the readable measure. */
+    hyphens: auto; /* lets the browser hyphenate Russian, which works because <html lang="ru"> */
   }
   .prose-ru h2 {
     @apply mt-14 mb-4 text-xl font-semibold tracking-tight;
@@ -137,25 +156,37 @@
  * Everything else (header, nav text) stays still: the root transition is off.
  */
 :root {
-  view-transition-name: none;
+  view-transition-name: none; /* turn off the default whole-page cross-fade */
 }
+/* every named part: how long it takes to move/resize */
 ::view-transition-group(*) {
   animation-duration: 220ms;
   animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
+/* both = animation-fill-mode: keep the first frame before start and the last frame after end */
+/* snapshot of the old outlet: fade out in 90ms */
 ::view-transition-old(page) {
   animation: 90ms ease-out both page-out;
 }
+/* the new outlet: fade and rise, starting 50ms in */
 ::view-transition-new(page) {
   animation: 220ms cubic-bezier(0.2, 0.8, 0.2, 1) 50ms both page-in; /* starts as the old page is nearly gone */
 }
 @keyframes page-out {
-  to { opacity: 0; }
+  to {
+    opacity: 0;
+  }
 }
 @keyframes page-in {
-  from { opacity: 0; transform: translateY(6px); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
 }
 
+/*
+* Shrinks every animation to ~0 when the OS asks for reduced motion
+* */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
