@@ -8,16 +8,16 @@
 
 export const person = {
   firstName: "Иван",
-  lastName: "[[Фамилия]]",
-  patronymic: "[[Отчество]]",
-  group: "ИТИм-25",
+  lastName: "Скиндер",
+  patronymic: "Павлович",
+  group: "БИм-25",
   university: "Донецкий национальный технический университет",
   universityShort: "ДонНТУ",
-  faculty: "[[Факультет]]",
-  department: "[[Кафедра]]",
-  specialty: "[[Специальность]]",
-  supervisor: "[[Научный руководитель: должность, ФИО]]",
-  thesis: "[[Точная тема магистерской работы — про разработку REST API]]",
+  faculty: "Факультет информационных систем и технологий",
+  department: "Кафедра экономической кибернетики",
+  specialty: "Бизнес-информатика",
+  supervisor: "доц., Харитонов Ю.Е.",
+  thesis: "Разработка REST API",
   github: "https://github.com/lavet13",
 };
 
@@ -48,19 +48,22 @@ export const pages = {
     endpoint: "/library/",
     label: "Библиотека",
     title: `Библиотека — ${shortName}`,
-    description: "Статьи и публикации по теме магистерской работы: проектирование REST API, HTTP, миграция legacy-систем.",
+    description:
+      "Статьи и публикации по теме магистерской работы: проектирование REST API, HTTP, миграция legacy-систем.",
   },
   "/links/": {
     endpoint: "/links/",
     label: "Ссылки",
     title: `Ссылки — ${shortName}`,
-    description: "Спецификации, документация и ресурсы по теме REST API и HTTP.",
+    description:
+      "Спецификации, документация и ресурсы по теме REST API и HTTP.",
   },
   "/ind/": {
     endpoint: "/ind/",
     label: "Проекты",
     title: `Проекты — ${shortName}`,
-    description: "Индивидуальный раздел: проекты в продакшене — Telegram-бот и веб-приложение службы доставки, миграция legacy PHP на Node.js.",
+    description:
+      "Индивидуальный раздел: проекты в продакшене — Telegram-бот и веб-приложение службы доставки, миграция legacy PHP на Node.js.",
   },
 } as const;
 
