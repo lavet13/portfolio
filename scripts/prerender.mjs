@@ -68,13 +68,17 @@ for (const raw of paths()) {
     // /<title>[^<]*<\/title>/ = "<title>", then any non-"<" chars, then "</title>" (the shell's default title)
     .replace(
       /<title>[^<]*<\/title>/,
-      () => headTags.replace(
-        /<(title|meta|link)\b/g, // g = EVERY match; (…) = group 1 = the tag name
-        "<$1 data-prerendered",
-      ) + // $1 = the captured name: "<meta" → "<meta data-prerendered"
+      () =>
+        headTags.replace(
+          // g = EVERY match; (…) = group 1 = the tag name
+          // \b = word boundary: matches "<link" but not a hypothetical "<linkfoo"
+          /<(title|meta|link)\b/g,
+          // $1 = the captured name: "<meta" → "<meta data-prerendered"
+          "<$1 data-prerendered",
+        ) +
+        // + the <link rel="canonical"> (or "" without SITE_URL)
         canonical,
-    ) // + the <link rel="canonical"> (or "" without SITE_URL)
-    // \b = word boundary: matches "<link" but not a hypothetical "<linkfoo"
+    )
     .replace('<div id="root"></div>', () => `<div id="root">${rest}</div>`); // fill the empty root
 
   await mkdir(join("dist", path), { recursive: true }); // join: "dist" + "/bio/" → "dist/bio/"; recursive: create parents, no error if it exists
