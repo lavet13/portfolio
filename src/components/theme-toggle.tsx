@@ -15,7 +15,7 @@ export function ThemeToggle() {
     try {
       localStorage.setItem("theme", next);
     } catch {
-      // storage blocked (private mode, file:// in some browsers): the choice lasts this visit only
+      // storage blocked (private mode): the choice lasts this visit only
     }
   }
 

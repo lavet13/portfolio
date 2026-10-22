@@ -8,6 +8,7 @@ const basepath = import.meta.env.DEV
   ? import.meta.env.BASE_URL // dev server: no <base> tag exists; I checked, this is "/" in dev
   : new URL(document.baseURI).pathname; // build: baseURI = the page's <base href> resolved to absolute, i.e. the site root, wherever it's hosted
 
+// Someone may link to .../bio/index.html (a portal, an old bookmark); the router only knows /bio/.
 if (location.pathname.endsWith("/index.html")) {
   // replaceState - rewrite the URL bar in place: no reload, no new history entry
   // slice(0, -n) - drop the last n characters (the length of "index.html"), keeping the trailing slash

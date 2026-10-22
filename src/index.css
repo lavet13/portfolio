@@ -65,7 +65,7 @@
     --font-*         font-sans, font-mono
     --text-*         text-sm… (font size); the --text-sm--line-height companion sets its line height
     --animate-*      animate-status-in; @keyframes inside @theme are emitted only if the animation is used
-*/
+  */
 
   --font-sans: "Golos Text Variable", "Golos Text", system-ui, sans-serif;
   --font-mono:
