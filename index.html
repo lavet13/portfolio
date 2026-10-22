@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Портфолио магистра</title>
     <script>
-      // Runs before first paint (inline classic scripts run even on file://, unlike modules).
+      // Runs before first paint, before the app's JS has loaded.
       // Only an explicit choice is stored; with none, CSS follows prefers-color-scheme.
       try {
         var t = localStorage.getItem("theme");

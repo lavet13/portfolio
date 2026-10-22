@@ -1,5 +1,6 @@
 import { useRouter, useRouterState } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+import { cn } from "../lib/utils";
 
 /**
  * The site's one signature detail: every navigation is shown as the HTTP
@@ -30,12 +31,18 @@ export function RequestLine() {
   }, [router]);
 
   return (
-    <p className="flex items-baseline gap-4 font-mono text-sm" aria-live="polite">
+    <p
+      className="flex items-baseline gap-4 font-mono text-sm"
+      aria-live="polite"
+    >
       <span className="text-stamp">GET</span>
       <span className="text-ink">{pathname}</span>
       {/* key remounts the span per navigation, restarting its CSS animation;
           the class is only added once a client navigation has been timed */}
-      <span key={pathname} className={`text-ok ${ms === null ? "" : "animate-status-in"}`}>
+      <span
+        key={pathname}
+        className={cn("text-ok", ms !== null && "animate-status-in")}
+      >
         200 OK
         {ms !== null && <span className="ml-4 text-muted">{ms} мс</span>}
       </span>

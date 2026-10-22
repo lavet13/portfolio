@@ -14,10 +14,8 @@ import { render, paths, SENTINEL } from "../dist-ssr/entry-server.js";
  */
 const SITE_URL = process.env.SITE_URL?.replace(/\/?$/, "/"); // normalise to exactly one trailing slash
 
-const shell = (await readFile("dist/index.html", "utf8")).replaceAll(
-  " crossorigin",
-  "",
-);
+const shell = await readFile("dist/index.html", "utf8");
+
 if (!shell.includes('<div id="root"></div>')) {
   throw new Error(
     "prerender: dist/index.html is already prerendered; run `vite build` first (yarn build)",
@@ -34,7 +32,7 @@ for (const raw of paths()) {
 
   const body = (await render(path)).replace(
     new RegExp(`href="${SENTINEL}/([^"?#]*)`, "g"),
-    'href="./$1index.html',
+    'href="./$1', // /__BASE__/bio/ → ./bio/  (any web server serves bio/index.html for a directory)
   );
   /*
       ^                                        start of the string
@@ -59,6 +57,14 @@ for (const raw of paths()) {
   const canonical = SITE_URL
     ? `<link rel="canonical" href="${SITE_URL}${path.slice(1)}">`
     : "";
+
+  /**
+   * Turns the SPA shell into one real HTML file per route, so any static web server
+   * can serve any page directly. The deploy path is unknown at build time (GitHub
+   * Pages' /portfolio/, some DonNTU path), so links are relative: each page gets a
+   * <base> pointing at the site root, and the router's links come out as ./bio/.
+   * (keep the SITE_URL paragraph as is)
+   */
   const html = shell
     .replace(
       '<meta charset="UTF-8" />',
