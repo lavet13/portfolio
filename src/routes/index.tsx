@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Fill } from "../components/fill";
 import { headFor, person } from "../content/site";
+import { about } from "../content/about";
 
 export const Route = createFileRoute("/")({
   head: () => headFor("/"),
@@ -28,8 +29,7 @@ function ResumePage() {
       </h1>
 
       <p className="mt-8 max-w-[46ch] text-lg text-muted">
-        Магистрант {person.universityShort}. Пишу на TypeScript и поддерживаю в продакшене
-        Telegram-бот и веб-приложение службы доставки «Наша Почта».
+        Магистрант {person.universityShort}. <Fill>{about.intro}</Fill>
       </p>
 
       <dl className="mt-14 grid max-w-3xl grid-cols-1 border-t border-rule sm:grid-cols-[10rem_1fr]">

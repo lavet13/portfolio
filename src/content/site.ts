@@ -1,3 +1,4 @@
+import { about } from "./about";
 /**
  * Everything the site says about you, in one place. Routes, <head> tags, the
  * nav rail and the sitemap all read from here, so a fact is edited once.
@@ -13,11 +14,19 @@ export const person = {
   group: "БИм-25",
   university: "Донецкий национальный технический университет",
   universityShort: "ДонНТУ",
+<<<<<<< HEAD
   faculty: "Факультет информационных систем и технологий",
   department: "Кафедра экономической кибернетики",
   specialty: "Бизнес-информатика",
   supervisor: "доц., Харитонов Ю.Е.",
   thesis: "Разработка REST API",
+=======
+  faculty: "[[Факультет]]",
+  department: "[[Кафедра]]",
+  specialty: "[[Специальность]]",
+  supervisor: "[[Научный руководитель: должность, ФИО]]",
+  thesis: about.thesisSummary,
+>>>>>>> template
   github: "https://github.com/lavet13",
 };
 
@@ -62,8 +71,12 @@ export const pages = {
     endpoint: "/ind/",
     label: "Проекты",
     title: `Проекты — ${shortName}`,
+<<<<<<< HEAD
     description:
       "Индивидуальный раздел: проекты в продакшене — Telegram-бот и веб-приложение службы доставки, миграция legacy PHP на Node.js.",
+=======
+    description: about.projectsDescription,
+>>>>>>> template
   },
 } as const;
 
