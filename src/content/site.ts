@@ -1,3 +1,4 @@
+import { about } from "./about";
 /**
  * Everything the site says about you, in one place. Routes, <head> tags, the
  * nav rail and the sitemap all read from here, so a fact is edited once.
@@ -17,7 +18,7 @@ export const person = {
   department: "[[Кафедра]]",
   specialty: "[[Специальность]]",
   supervisor: "[[Научный руководитель: должность, ФИО]]",
-  thesis: "[[Точная тема магистерской работы — про разработку REST API]]",
+  thesis: about.thesisSummary,
   github: "https://github.com/lavet13",
 };
 
@@ -60,7 +61,7 @@ export const pages = {
     endpoint: "/ind/",
     label: "Проекты",
     title: `Проекты — ${shortName}`,
-    description: "Индивидуальный раздел: проекты в продакшене — Telegram-бот и веб-приложение службы доставки, миграция legacy PHP на Node.js.",
+    description: about.projectsDescription,
   },
 } as const;
 
