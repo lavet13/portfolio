@@ -18,7 +18,7 @@ export const person = {
   department: "[[Кафедра]]",
   specialty: "[[Специальность]]",
   supervisor: "[[Научный руководитель: должность, ФИО]]",
-  thesis: about.thesisSummary,
+  thesis: "[[Точная тема магистерской работы — про разработку REST API]]",
   github: "https://github.com/lavet13",
 };
 
@@ -31,7 +31,7 @@ export const pages = {
     endpoint: "/",
     label: "Резюме",
     title: `${shortName} — магистр ${person.universityShort}`,
-    description: `Магистр ${person.universityShort}, группа ${person.group}. Тема магистерской работы — разработка REST API на примере сервиса отслеживания грузов. Резюме, реферат, библиотека и проекты.`,
+    description: `Магистр ${person.universityShort}, группа ${person.group}. ${about.thesisSummary} Резюме, реферат, библиотека и проекты.`,
   },
   "/bio/": {
     endpoint: "/bio/",
@@ -49,13 +49,15 @@ export const pages = {
     endpoint: "/library/",
     label: "Библиотека",
     title: `Библиотека — ${shortName}`,
-    description: "Статьи и публикации по теме магистерской работы: проектирование REST API, HTTP, миграция legacy-систем.",
+    description:
+      "Статьи и публикации по теме магистерской работы: проектирование REST API, HTTP, миграция legacy-систем.",
   },
   "/links/": {
     endpoint: "/links/",
     label: "Ссылки",
     title: `Ссылки — ${shortName}`,
-    description: "Спецификации, документация и ресурсы по теме REST API и HTTP.",
+    description:
+      "Спецификации, документация и ресурсы по теме REST API и HTTP.",
   },
   "/ind/": {
     endpoint: "/ind/",
