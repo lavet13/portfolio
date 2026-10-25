@@ -31,7 +31,7 @@ export const pages = {
     endpoint: "/",
     label: "Резюме",
     title: `${shortName} — магистр ${person.universityShort}`,
-    description: `Магистр ${person.universityShort}, группа ${person.group}. Тема магистерской работы — разработка REST API на примере сервиса отслеживания грузов. Резюме, реферат, библиотека и проекты.`,
+    description: `Магистр ${person.universityShort}, группа ${person.group}. ${about.thesisSummary} Резюме, реферат, библиотека и проекты.`,
   },
   "/bio/": {
     endpoint: "/bio/",
