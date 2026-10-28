@@ -24,6 +24,10 @@ if (location.pathname.endsWith("/index.html")) {
 
 const router = makeRouter({ basepath });
 
+// The first load has nothing to animate from: the prerendered page is already on screen.
+// shouldViewTransition is one-shot: the router reads it on its next transition, then resets it,
+// so every later navigation uses defaultViewTransition again.
+router.shouldViewTransition = false;
 await router.load(); // load the matched route's lazy chunk first, so the first render isn't the empty Suspense fallback
 
 const App = (
