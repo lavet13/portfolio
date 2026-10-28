@@ -78,6 +78,16 @@ export function EndpointNav() {
  * to the new item. onNavigate lets the phone disclosure close after a tap.
  */
 function EndpointList({ onNavigate }: { onNavigate?: () => void }) {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  /** A plain click on the page you're already on does nothing; the phone disclosure still closes. */
+  function handleClick(e: React.MouseEvent<HTMLAnchorElement>, path: PagePath) {
+    const plainClick =
+      e.button === 0 && !(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey);
+    if (plainClick && path === pathname) e.preventDefault();
+    onNavigate?.();
+  }
+
   return (
     <ul className="flex flex-col gap-1">
       {order.map((path) => (
@@ -85,7 +95,7 @@ function EndpointList({ onNavigate }: { onNavigate?: () => void }) {
           <Link
             to={path}
             activeOptions={{ exact: true }}
-            onClick={onNavigate}
+            onClick={(e) => handleClick(e, path)}
             className="group relative grid grid-cols-[5.25rem_1fr] items-baseline gap-3 rounded-md px-3 py-2 no-underline"
           >
             {({ isActive }) => (
