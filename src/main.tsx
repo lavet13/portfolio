@@ -24,21 +24,24 @@ if (location.pathname.endsWith("/index.html")) {
 
 const router = makeRouter({ basepath });
 
-// The first load has nothing to animate from: the prerendered page is already on screen.
-// shouldViewTransition is one-shot: the router reads it on its next transition, then resets it,
-// so every later navigation uses defaultViewTransition again.
-router.shouldViewTransition = false;
-await router.load(); // load the matched route's lazy chunk first, so the first render isn't the empty Suspense fallback
-
 const App = (
   <StrictMode>
     <RouterProvider router={router} />
   </StrictMode>
 );
 
-// [data-prerendered] - CSS attribute selector: every element carrying that attribute
-document.querySelectorAll("[data-prerendered]").forEach((el) => el.remove());
+const rootElement = document.getElementById("root")!;
 
-const root = document.getElementById("root")!;
+// The first load has nothing to animate from: the prerendered page is already on screen.
+// Set BEFORE load(): the transition happens during it. One-shot, so later navigations animate.
+router.shouldViewTransition = false;
 
-createRoot(root).render(App);
+// Dev server: #root is empty (no prerender), so there's nothing to keep on screen: render right away.
+const ready = rootElement.hasChildNodes() ? router.load() : Promise.resolve();
+// .then, not top-level await: if a lazy route chunk ever imports from this entry chunk,
+// a pending top-level await would keep this module "evaluating" and that import would never finish.
+void ready.then(() => {
+  // [data-prerendered]: the head tags prerender.mjs wrote; <HeadContent /> renders the route's own
+  document.querySelectorAll("[data-prerendered]").forEach((el) => el.remove());
+  createRoot(rootElement).render(App);
+});
