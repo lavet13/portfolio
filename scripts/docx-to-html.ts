@@ -23,11 +23,26 @@ if (!input || !output) {
  * :fresh forces a new element each time.
  */
 const styleMap = [
-  // the page already has its own <h1> ("Реферат"), so the document's levels shift down one
+  // the page already has its own <h1> ("Реферат"), so every level shifts down one;
+  // HTML stops at <h6>, so Heading 5 and 6 share it
   "p[style-name='Heading 1'] => h2:fresh",
   "p[style-name='Heading 2'] => h3:fresh",
+  "p[style-name='Heading 3'] => h4:fresh",
+  "p[style-name='Heading 4'] => h5:fresh",
+  "p[style-name='Heading 5'] => h6:fresh",
+  "p[style-name='Heading 6'] => h6:fresh",
+  // the ВКР template's own heading styles
+  "p[style-name='H1'] => h2:fresh",
+  "p[style-name='H2'] => h3:fresh",
   // consecutive sources share ONE <ol class="sources">; each source is a fresh <li>
   "p[style-name='Bibliography'] => ol.sources > li:fresh",
+  "p[style-name='Bib'] => ol.sources > li:fresh",
+  // figure and table captions ("Рисунок 1 — …"), Word's built-in name and the template's
+  "p[style-name='Caption'] => p.caption:fresh",
+  "p[style-name='Cap'] => p.caption:fresh",
+  // no :fresh on purpose: consecutive code lines merge into ONE <pre>, joined by newlines
+  "p[style-name='Code'] => pre:separator('\\n')",
+  "p[style-name='List Paragraph'] => p:fresh",
 ];
 
 const { value: raw, messages } = await mammoth.convertToHtml(
@@ -35,12 +50,20 @@ const { value: raw, messages } = await mammoth.convertToHtml(
   { styleMap },
 );
 
-/** Plain text of an HTML fragment: every tag removed. */
+/** Plain text of an HTML fragment: it removes tags only; the text between them stays.
+ * Examples:
+ * "<strong>3.1 Обзор <a id="x"></a>международных</strong> источников " ->
+ * "3.1 Обзор международных источников"
+ */
 function textOf(html: string): string {
   return html.replace(/<[^>]+>/g, "").trim();
 }
 
-/** URL-friendly id: "3.1 Обзор международных источников" -> "3-1-обзор-международных-источников". */
+/** URL-friendly id:
+ * "3.1 Обзор международных источников" -> "3-1-обзор-международных-источников"
+ * "«Цель» — и задачи!"                 -> "цель-и-задачи"
+ * "  1) Итог  "                        -> "1-итог"
+ */
 function slugify(text: string): string {
   return text
     .toLowerCase()
@@ -48,12 +71,31 @@ function slugify(text: string): string {
     .replace(/^-|-$/g, ""); // no "-" at the start or end
 }
 
-const html = raw
-  // headings: plain text (drops the <strong> Word adds) plus an id the page can link to
-  .replace(/<(h[23])>(.*?)<\/\1>/g, (_match, tag: string, inner: string) => {
-    const text = textOf(inner);
-    return `<${tag} id="${slugify(text)}">${text}</${tag}>`;
-  })
+/**
+ * Gives every heading an id the page can link to, with plain text inside (drops the
+ * <strong> Word adds). ids must be unique on a page, so a repeat gets "-2", "-3"…
+ */
+function withHeadingIds(html: string): string {
+  const used = new Map<string, number>(); // id → how many headings have produced it so far
+  return html.replace(
+    /<(h[2-6])>(.*?)<\/\1>/g,
+    (_match, tag: string, inner: string) => {
+      const text = textOf(inner);
+      const base = slugify(text);
+      const count = (used.get(base) ?? 0) + 1; // ?? 0: a Map returns undefined for an unseen key
+      used.set(base, count);
+      const id = count === 1 ? base : `${base}-${count}`;
+      return `<${tag} id="${id}">${text}</${tag}>`;
+    },
+  );
+}
+
+/**
+ * INPUT: <h2>ВВЕДЕНИЕ</h2><p>Текст</p><h2>ВЫВОДЫ</h2>
+ * GREEDY (.*) : group2="ВВЕДЕНИЕ</h2><p>Текст</p><h2>ВЫВОДЫ" <- ONE match, swallowing both headings
+ * LAZY   (.*?): group2="ВВЕДЕНИЕ", group2="ВЫВОДЫ"           <- two matches, one per heading
+ */
+const html = withHeadingIds(raw)
   // the <ol> numbers the sources itself, so drop the typed "1. ", "2. "…
   .replace(/<li>\d+\.\s*/g, "<li>");
 
