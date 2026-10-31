@@ -1,6 +1,7 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, rm, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import mammoth from "mammoth";
+import sharp from "sharp";
 
 /**
  * Converts a .docx into HTML for the /diss/ page.
@@ -25,6 +26,7 @@ if (!input || !output) {
 const styleMap = [
   // the page already has its own <h1> ("Реферат"), so every level shifts down one;
   // HTML stops at <h6>, so Heading 5 and 6 share it
+  "p[style-name='Heading'] => h2:fresh",
   "p[style-name='Heading 1'] => h2:fresh",
   "p[style-name='Heading 2'] => h3:fresh",
   "p[style-name='Heading 3'] => h4:fresh",
@@ -45,9 +47,37 @@ const styleMap = [
   "p[style-name='List Paragraph'] => p:fresh",
 ];
 
+/**
+ * Where the figures go. public/ is copied to the site root on build, and every page's
+ * <base> points at the site root, so "./diss/…" works from any page.
+ */
+const IMAGES_DIR = "public/diss";
+/**
+ * rm(..., { recursive: true, force: true }) deletes the folder and everything in it.
+ * force: true means “no error if it doesn’t exist”. It’s safe only because public/diss is
+ * a folder this script generates; never point IMAGES_DIR at anything else.
+ * */
+await rm(IMAGES_DIR, { recursive: true, force: true }); // generated folder: start clean, no stale figures
+await mkdir(IMAGES_DIR, { recursive: true });
+
+let figureCount = 0;
+/** Each figure becomes a WebP file instead of base64 inside the HTML. */
+const convertImage = mammoth.images.imgElement(async (image) => {
+  // figureCount numbers the files in document order: figure-1.webp, figure-2.webp, and so on.
+  figureCount += 1;
+  const name = `figure-${figureCount}.webp`;
+  await sharp(await image.readAsBuffer())
+    // scales down to 1600 px wide at most;
+    // withoutEnlargement means smaller images stay as they are.
+    .resize({ width: 1600, withoutEnlargement: true }) // plenty for a text column on a sharp screen
+    .webp({ quality: 80 })
+    .toFile(`${IMAGES_DIR}/${name}`);
+  return { src: `./diss/${name}` };
+});
+
 const { value: raw, messages } = await mammoth.convertToHtml(
   { path: input },
-  { styleMap },
+  { styleMap, convertImage },
 );
 
 /** Plain text of an HTML fragment: it removes tags only; the text between them stays.
@@ -91,11 +121,27 @@ function withHeadingIds(html: string): string {
 }
 
 /**
+ * Everything before the first heading (title block, «СОДЕРЖАНИЕ» with page numbers)
+ * belongs to the printed document; the page has its own header and builds its own contents.
+ */
+function fromFirstHeading(html: string): string {
+  const start = html.search(/<h[2-6][ >]/); // index of the first match, or -1 if none
+  return start === -1 ? html : html.slice(start); // no heading at all: keep everything
+}
+
+/**
  * INPUT: <h2>ВВЕДЕНИЕ</h2><p>Текст</p><h2>ВЫВОДЫ</h2>
  * GREEDY (.*) : group2="ВВЕДЕНИЕ</h2><p>Текст</p><h2>ВЫВОДЫ" <- ONE match, swallowing both headings
  * LAZY   (.*?): group2="ВВЕДЕНИЕ", group2="ВЫВОДЫ"           <- two matches, one per heading
  */
-const html = withHeadingIds(raw)
+const html = fromFirstHeading(withHeadingIds(raw))
+  // an image paragraph followed by its "Рисунок N — …" caption → <figure> + <figcaption>;
+  // the caption is also the alt text (the docx's own alt text is the diagram's Graphviz source)
+  .replace(
+    /<p><img [^>]*src="([^"]+)"[^>]*><\/p><p(?: class="caption")?>(Рисунок[^<]*)<\/p>/g,
+    (_match, src: string, caption: string) =>
+      `<figure><img src="${src}" alt="${caption}" loading="lazy" /><figcaption>${caption}</figcaption></figure>`,
+  )
   // the <ol> numbers the sources itself, so drop the typed "1. ", "2. "…
   .replace(/<li>\d+\.\s*/g, "<li>");
 
