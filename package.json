@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs && tsc -b",
+    "diss": "node scripts/docx-to-html.ts src/content/referat.docx src/content/referat.html",
+    "build": "yarn diss && vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs && tsc -b",
     "lint": "eslint .",
     "preview": "vite preview"
   },
