@@ -1,4 +1,4 @@
-import { mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, rm, writeFile, readdir } from "node:fs/promises";
 import { dirname } from "node:path";
 import { existsSync } from "node:fs";
 import mammoth from "mammoth";
@@ -60,13 +60,13 @@ const styleMap = [
  * <base> points at the site root, so "./diss/…" works from any page.
  */
 const IMAGES_DIR = "public/diss";
-/**
- * rm(..., { recursive: true, force: true }) deletes the folder and everything in it.
- * force: true means “no error if it doesn’t exist”. It’s safe only because public/diss is
- * a folder this script generates; never point IMAGES_DIR at anything else.
- * */
-await rm(IMAGES_DIR, { recursive: true, force: true }); // generated folder: start clean, no stale figures
+
+// Empty the folder but keep it: a running dev server stops serving a folder that was deleted
+// and recreated under it. Emptying still removes stale figures from an older document version.
 await mkdir(IMAGES_DIR, { recursive: true });
+for (const name of await readdir(IMAGES_DIR)) {
+  await rm(`${IMAGES_DIR}/${name}`);
+}
 
 let figureCount = 0;
 /** Each figure becomes a WebP file instead of base64 inside the HTML. */

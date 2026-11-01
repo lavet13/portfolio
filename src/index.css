@@ -146,6 +146,27 @@
   .prose-ru a {
     color: var(--stamp);
   }
+
+  /* the converted реферат (src/content/referat.html) */
+  .prose-ru :is(h2, h3)[id] {
+    scroll-margin-top: 2.5rem; /* a jump from the contents list stops just below the top edge */
+  }
+  .prose-ru figure {
+    @apply my-8;
+  }
+  .prose-ru figure img {
+    @apply h-auto w-full rounded-md border border-rule;
+    background: white; /* the diagrams are drawn on white; keep it in dark mode too */
+  }
+  .prose-ru figcaption {
+    @apply mt-3 text-sm text-muted;
+  }
+  .prose-ru ol.sources {
+    @apply list-decimal space-y-2 pl-6 text-sm;
+  }
+  .prose-ru ol.sources a {
+    overflow-wrap: anywhere; /* long URLs wrap instead of widening the page on phones */
+  }
 }
 
 /*
