@@ -1,5 +1,6 @@
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
+import { existsSync } from "node:fs";
 import mammoth from "mammoth";
 import sharp from "sharp";
 
@@ -15,6 +16,13 @@ if (!input || !output) {
     "usage: node scripts/docx-to-html.ts <input.docx> <output.html>",
   );
   process.exit(1);
+}
+
+// The template branch has no document: nothing to convert, and the build goes on
+// (/diss/ then shows its placeholder sections).
+if (!existsSync(input)) {
+  console.log(`${input} not found: skipping the conversion`);
+  process.exit(0);
 }
 
 /**
