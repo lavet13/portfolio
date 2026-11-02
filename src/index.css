@@ -151,6 +151,30 @@
   .prose-ru :is(h2, h3)[id] {
     scroll-margin-top: 2.5rem; /* a jump from the contents list stops just below the top edge */
   }
+
+  /* a heading links to itself; it keeps looking like a heading, with a "#" as the hint */
+  .prose-ru :is(h2, h3) > a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .prose-ru :is(h2, h3) > a::after {
+    content: "#"; /* browsers without the "/ alt" syntax drop the next line and keep this one */
+    content: "#" / ""; /* after the slash: the alt text; "" means screen readers skip it */
+    margin-left: 0.3em;
+    color: var(--muted);
+    opacity: 0;
+    transition: opacity 150ms;
+  }
+  .prose-ru :is(h2, h3) > a:is(:hover, :focus-visible)::after {
+    opacity: 1;
+  }
+  @media (hover: none) {
+    /* touch screens have no hover: keep the hint faintly visible */
+    .prose-ru :is(h2, h3) > a::after {
+      opacity: 0.5;
+    }
+  }
+
   .prose-ru figure {
     @apply my-8;
   }
