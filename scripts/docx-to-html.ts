@@ -110,6 +110,18 @@ function slugify(text: string): string {
 }
 
 /**
+ * "СПИСОК ИСТОЧНИКОВ" -> "Список источников". Only a heading with no lowercase letter at all
+ * changes; Latin words keep their case (in a Russian heading they're abbreviations: REST, API).
+ */
+function sentenceCase(text: string): string {
+  if (/\p{Ll}/u.test(text)) return text; // has a lowercase letter: typed that way on purpose
+  const lower = text.replace(/\p{Script=Cyrillic}+/gu, (word) =>
+    word.toLowerCase(),
+  );
+  return lower.replace(/\p{L}/u, (first) => first.toUpperCase()); // no g: the first letter only
+}
+
+/**
  * Gives every heading an id the page can link to, with plain text inside (drops the
  * <strong> Word adds). ids must be unique on a page, so a repeat gets "-2", "-3"…
  */
@@ -118,12 +130,14 @@ function withHeadingIds(html: string): string {
   return html.replace(
     /<(h[2-6])>(.*?)<\/\1>/g,
     (_match, tag: string, inner: string) => {
-      const text = textOf(inner);
+      const text = sentenceCase(textOf(inner));
       const base = slugify(text);
       const count = (used.get(base) ?? 0) + 1; // ?? 0: a Map returns undefined for an unseen key
       used.set(base, count);
       const id = count === 1 ? base : `${base}-${count}`;
-      return `<${tag} id="${id}">${text}</${tag}>`;
+      // the heading links to itself: a click puts #id in the address bar, ready to copy.
+      // "./diss/#id", not "#id": the page's <base> points at the site root
+      return `<${tag} id="${id}"><a href="./diss/#${id}">${text}</a></${tag}>`;
     },
   );
 }

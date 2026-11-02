@@ -3,6 +3,11 @@ import { defineConfig, type Plugin } from "vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import tailwindcss from "@tailwindcss/vite";
 
+/**
+ * Built pages get a <base href> from prerender.mjs, so relative URLs (./diss/figure-1.webp)
+ * resolve from the site root on every page. The dev server serves index.html as it is, so give
+ * it the same: <base href="/">. Without it, ./diss/… on the /diss/ page points at /diss/diss/….
+ */
 function devBase(): Plugin {
   return {
     name: "dev-base",
