@@ -107,9 +107,16 @@ function AbstractPage() {
     const url = new URL(link.href); // .href: the full URL, already resolved against <base>
     if (url.pathname !== location.pathname || !url.hash) return; // another page: the browser's job
     e.preventDefault();
+    const id = decodeURIComponent(url.hash.slice(1)); // "#3-2-%D0%BE…" → "3-2-обзор…"
+    if (url.hash === location.hash) {
+      // already in the address bar: navigating to the same URL makes the router reload the
+      // page, with the whole-page transition, ignoring viewTransition: false. Just scroll.
+      document.getElementById(id)?.scrollIntoView(scrollOptions());
+      return;
+    }
     void navigate({
       to: "/diss/",
-      hash: decodeURIComponent(url.hash.slice(1)), // "#3-2-%D0%BE…" → "3-2-обзор…"
+      hash: id,
       viewTransition: false, // a jump within the page shouldn't fade the whole page
       hashScrollIntoView: scrollOptions(),
     });
