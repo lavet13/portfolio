@@ -3,6 +3,7 @@ import { EndpointNav } from "../components/endpoint-nav";
 import { RequestLine } from "../components/request-line";
 import { ThemeToggle } from "../components/theme-toggle";
 import { headFor, person } from "../content/site";
+import { GoUp } from "../components/go-up";
 
 export const Route = createRootRoute({
   head: () => headFor("/"),
@@ -14,6 +15,7 @@ function RootComponent() {
   return (
     <>
       <HeadContent />
+      <GoUp />
       <div className="min-h-dvh">
         <header className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 text-sm">
           <div className="flex gap-5 text-muted">
@@ -55,7 +57,9 @@ function NotFound() {
   return (
     <section>
       <h1 className="text-3xl font-bold tracking-tight">Такой страницы нет</h1>
-      <p className="mt-4 text-muted">Проверьте адрес или выберите раздел в меню.</p>
+      <p className="mt-4 text-muted">
+        Проверьте адрес или выберите раздел в меню.
+      </p>
     </section>
   );
 }
