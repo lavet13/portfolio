@@ -69,6 +69,16 @@ export const pages = {
 
 export type PagePath = keyof typeof pages;
 
+/** The pages top to bottom, as the nav lists them. Page transitions read it too (router.ts). */
+export const pageOrder: PagePath[] = [
+  "/",
+  "/bio/",
+  "/diss/",
+  "/library/",
+  "/links/",
+  "/ind/",
+];
+
 /** The `head` option for a route: title + description + Open Graph copies for link previews. */
 export function headFor(path: PagePath) {
   const { title, description } = pages[path];

@@ -217,6 +217,48 @@
 ::view-transition-new(page) {
   animation: 220ms cubic-bezier(0.2, 0.8, 0.2, 1) 50ms both page-in; /* starts as the old page is nearly gone */
 }
+
+/*
+ * Direction (router.ts): "forward" = to a page lower in the nav, "back" = higher up. The page
+ * moves the same way the nav's accent bar slides. Browsers without transition types skip these
+ * rules (unknown selector) and keep the plain fade above.
+ */
+:root:active-view-transition-type(forward)::view-transition-old(page) {
+  animation-name: page-out-up;
+}
+:root:active-view-transition-type(forward)::view-transition-new(page) {
+  animation-name: page-in-from-below;
+}
+:root:active-view-transition-type(back)::view-transition-old(page) {
+  animation-name: page-out-down;
+}
+:root:active-view-transition-type(back)::view-transition-new(page) {
+  animation-name: page-in-from-above;
+}
+@keyframes page-out-up {
+  to {
+    opacity: 0;
+    translate: 0 -12px;
+  }
+}
+@keyframes page-out-down {
+  to {
+    opacity: 0;
+    translate: 0 12px;
+  }
+}
+@keyframes page-in-from-below {
+  from {
+    opacity: 0;
+    translate: 0 12px;
+  }
+}
+@keyframes page-in-from-above {
+  from {
+    opacity: 0;
+    translate: 0 -12px;
+  }
+}
 @keyframes page-out {
   to {
     opacity: 0;

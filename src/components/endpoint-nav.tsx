@@ -1,17 +1,8 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Collapsible } from "radix-ui";
 import { useState } from "react";
-import { pages, type PagePath } from "../content/site";
+import { pageOrder, pages, type PagePath } from "../content/site";
 import { cn } from "../lib/utils";
-
-const order: PagePath[] = [
-  "/",
-  "/bio/",
-  "/diss/",
-  "/library/",
-  "/links/",
-  "/ind/",
-];
 
 /**
  * Site navigation styled as an API's endpoint list. The active item's accent bar
@@ -22,7 +13,7 @@ const order: PagePath[] = [
 export function EndpointNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   // .find returns PagePath | undefined: typed, and undefined on the 404 page
-  const current = order.find((p) => p === pathname);
+  const current = pageOrder.find((p) => p === pathname);
   // controlled: we own the open state, so a tapped link can close it
   const [open, setOpen] = useState(false);
 
@@ -90,7 +81,7 @@ function EndpointList({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <ul className="flex flex-col gap-1">
-      {order.map((path) => (
+      {pageOrder.map((path) => (
         <li key={path}>
           <Link
             to={path}
