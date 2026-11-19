@@ -45,7 +45,7 @@ function RootComponent() {
 
         <footer className="mx-auto max-w-6xl border-t border-rule px-5 py-8 text-sm text-muted">
           <a href={person.github} className="hover:text-ink">
-            github.com/lavet13
+            {person.github.replace(/^https?:\/\//, "")}
           </a>
         </footer>
       </div>
