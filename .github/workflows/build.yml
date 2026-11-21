@@ -1,0 +1,39 @@
+name: Build for another host
+
+on:
+  workflow_dispatch:
+    inputs:
+      site_url:
+        description: "Absolute URL the site will live at, e.g. https://masters.donntu.ru/2026/fist/surname/"
+        required: true # the form can't be submitted empty
+        type: string
+
+permissions:
+  contents: read # only checkout; this workflow deploys nothing
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: "yarn"
+      - name: Check the Yarn version
+        run: yarn --version
+      - name: Install dependencies
+        run: yarn install --immutable
+      - name: Build
+        run: yarn build
+        env:
+          SITE_URL: ${{ inputs.site_url }} # the form's value, handed to the build as an env variable
+
+      - name: Upload dist/ as an artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: site
+          path: "dist"
+          if-no-files-found: error
