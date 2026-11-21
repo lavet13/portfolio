@@ -53,12 +53,12 @@ const placeholderSections: { id: string; title: string; hint: string }[] = [
   {
     id: "intro",
     title: "Введение",
-    hint: "[[Что за система, почему REST API — 1–2 абзаца]]",
+    hint: "[[Что за работа и почему она нужна — 1–2 абзаца]]",
   },
   {
     id: "relevance",
     title: "1. Актуальность темы",
-    hint: "[[Зачем это нужно сейчас: legacy PHP-формы, интеграции, мобильные клиенты]]",
+    hint: "[[Зачем эта работа нужна сейчас]]",
   },
   {
     id: "goal",
@@ -72,8 +72,8 @@ const placeholderSections: { id: string; title: string; hint: string }[] = [
   },
   {
     id: "design",
-    title: "4. Проектирование REST API сервиса отслеживания грузов",
-    hint: "[[Ресурсы, методы, коды ответов, валидация на сервере — схемы и примеры запросов]]",
+    title: "4. Основная часть",
+    hint: "[[Основные результаты: схемы, примеры, эксперименты]]",
   },
   {
     id: "conclusions",
