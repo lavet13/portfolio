@@ -8,7 +8,7 @@ import { render, paths, SENTINEL } from "../dist-ssr/entry-server.js";
  * files because file:// has no directory index; crossorigin is stripped because
  * file:// pages have origin "null" and crossorigin forces a CORS fetch that fails.
  *
- * SITE_URL (e.g. https://lavet13.github.io/portfolio/) is optional. When set, each
+ * SITE_URL (e.g. https://username.github.io/portfolio/) is optional. When set, each
  * page gets a canonical link and the build writes sitemap.xml + robots.txt; both
  * need absolute URLs, so without it the output stays host-agnostic and skips them.
  */

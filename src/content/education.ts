@@ -2,7 +2,7 @@ import { person } from "./site";
 
 export const education: { years: string; place: string; note: string }[] = [
   {
-    years: "[[2025]] — сейчас",
+    years: "[[годы]] — сейчас",
     place: `${person.universityShort}, магистратура`,
     note: `Группа ${person.group}. Тема работы: ${person.thesis}`,
   },
@@ -11,5 +11,5 @@ export const education: { years: string; place: string; note: string }[] = [
     place: "[[ВУЗ, бакалавриат или специалитет]]",
     note: "[[Направление, тема дипломной работы]]",
   },
-  { years: "2016", place: "ГБОУ ОШ № 39 г.о. Макеевка", note: "селище Осипенко, Горняцький район" },
+  { years: "[[годы]]", place: "[[Школа, город]]", note: "[[Примечание, если нужно]]" },
 ];

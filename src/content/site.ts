@@ -8,18 +8,18 @@ import { about } from "./about";
  */
 
 export const person = {
-  firstName: "Иван",
+  firstName: "[[Имя]]",
   lastName: "[[Фамилия]]",
   patronymic: "[[Отчество]]",
-  group: "ИТИм-25",
+  group: "[[Группа]]",
   university: "Донецкий национальный технический университет",
   universityShort: "ДонНТУ",
   faculty: "[[Факультет]]",
   department: "[[Кафедра]]",
   specialty: "[[Специальность]]",
   supervisor: "[[Научный руководитель: должность, ФИО]]",
-  thesis: "[[Точная тема магистерской работы — про разработку REST API]]",
-  github: "https://github.com/lavet13",
+  thesis: "[[Точная тема магистерской работы]]",
+  github: "https://github.com/[[логин]]",
 };
 
 export const fullName = `${person.lastName} ${person.firstName} ${person.patronymic}`;
@@ -50,14 +50,14 @@ export const pages = {
     label: "Библиотека",
     title: `Библиотека — ${shortName}`,
     description:
-      "Статьи и публикации по теме магистерской работы: проектирование REST API, HTTP, миграция legacy-систем.",
+      "[[Статьи и публикации по теме магистерской работы — одной фразой]]",
   },
   "/links/": {
     endpoint: "/links/",
     label: "Ссылки",
     title: `Ссылки — ${shortName}`,
     description:
-      "Спецификации, документация и ресурсы по теме REST API и HTTP.",
+      "[[Какие ресурсы собраны на этой странице — одной фразой]]",
   },
   "/ind/": {
     endpoint: "/ind/",
