@@ -12,7 +12,7 @@ import { render, paths, SENTINEL } from "../dist-ssr/entry-server.js";
  * page gets a canonical link and the build writes sitemap.xml + robots.txt; both
  * need absolute URLs, so without it the output stays host-agnostic and skips them.
  */
-const SITE_URL = process.env.SITE_URL?.replace(/\/?$/, "/"); // normalise to exactly one trailing slash
+const SITE_URL = (process.env.SITE_URL || undefined)?.replace(/\/?$/, "/"); // normalise to exactly one trailing slash
 
 const shell = await readFile("dist/index.html", "utf8");
 
