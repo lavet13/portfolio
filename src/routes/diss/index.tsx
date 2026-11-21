@@ -93,6 +93,7 @@ const contents: Entry[] = referat
 
 function AbstractPage() {
   const navigate = useNavigate();
+  const active = useActiveHeading(contents);
 
   /**
    * Every link to a section of this page (the contents list, the headings) is a plain <a>.
@@ -135,7 +136,11 @@ function AbstractPage() {
         onClick={handleClick}
         className="mt-10 xl:grid xl:grid-cols-[minmax(0,1fr)_13rem] xl:gap-x-8"
       >
-        <Contents entries={contents} />
+        <Contents
+          entries={contents}
+          active={active}
+          className="border-t border-rule pt-6 xl:sticky xl:top-10 xl:col-start-2 xl:row-start-1 xl:max-h-[calc(100dvh-5rem)] xl:self-start xl:overflow-y-auto xl:border-t-0 xl:pt-0"
+        />
         <div className="xl:col-start-1 xl:row-start-1">
           {referat ? <Referat html={referat} /> : <Placeholder />}
         </div>
@@ -225,8 +230,15 @@ function useActiveHeading(entries: Entry[]): string | undefined {
  * Links to the page's own sections; nested entries (3.1, 3.2…) are indented. From xl up it
  * sticks beside the document, and a bar slides along it to the section being read.
  */
-function Contents({ entries }: { entries: Entry[] }) {
-  const active = useActiveHeading(entries);
+function Contents({
+  entries,
+  active,
+  className,
+}: {
+  entries: Entry[];
+  active: string | undefined; // required, but may be undefined (above the first heading)
+  className?: string; // placement belongs to the caller; the list itself doesn't know where it sits
+}) {
   const list = useRef<HTMLDivElement>(null);
   const [bar, setBar] = useState<{ top: number; height: number }>();
 
@@ -243,10 +255,7 @@ function Contents({ entries }: { entries: Entry[] }) {
   }, [active]);
 
   return (
-    <nav
-      aria-label="Содержание"
-      className="border-t border-rule pt-6 xl:sticky xl:top-10 xl:col-start-2 xl:row-start-1 xl:max-h-[calc(100dvh-5rem)] xl:self-start xl:overflow-y-auto xl:border-t-0 xl:pt-0"
-    >
+    <nav aria-label="Содержание" className={className}>
       <p className="mb-3 hidden text-sm font-semibold xl:block">Содержание</p>
       {/* relative: the bar's position and the links' offsetTop are both measured from here */}
       <div ref={list} className="relative">
