@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Fill } from "../../components/fill";
 import { headFor, pages, person } from "../../content/site";
 import { useLayoutEffect, useRef, useState, type MouseEvent } from "react";
+import { Collapsible } from "radix-ui";
 
 export const Route = createFileRoute("/diss/")({
   head: () => headFor("/diss/"),
@@ -136,10 +137,11 @@ function AbstractPage() {
         onClick={handleClick}
         className="mt-10 xl:grid xl:grid-cols-[minmax(0,1fr)_13rem] xl:gap-x-8"
       >
+        <SectionBar entries={contents} active={active} />
         <Contents
           entries={contents}
           active={active}
-          className="border-t border-rule pt-6 xl:sticky xl:top-10 xl:col-start-2 xl:row-start-1 xl:max-h-[calc(100dvh-5rem)] xl:self-start xl:overflow-y-auto xl:border-t-0 xl:pt-0"
+          className="hidden xl:sticky xl:top-10 xl:col-start-2 xl:row-start-1 xl:block xl:max-h-[calc(100dvh-5rem)] xl:self-start xl:overflow-y-auto"
         />
         <div className="xl:col-start-1 xl:row-start-1">
           {referat ? <Referat html={referat} /> : <Placeholder />}
@@ -159,7 +161,7 @@ function Placeholder() {
   return (
     <>
       {placeholderSections.map((s) => (
-        <section key={s.id} id={s.id} className="scroll-mt-10">
+        <section key={s.id} id={s.id} className="scroll-mt-16 xl:scroll-mt-10">
           <h2>
             <a href={`./diss/#${s.id}`}>{s.title}</a>
           </h2>
@@ -285,5 +287,55 @@ function Contents({
         </ul>
       </div>
     </nav>
+  );
+}
+
+/**
+ * Below xl: a bar that sticks to the top of the window and names the section being read.
+ * Tapping it opens the contents over the page; picking a section closes it again.
+ */
+function SectionBar({
+  entries,
+  active,
+}: {
+  entries: Entry[];
+  active: string | undefined;
+}) {
+  const [open, setOpen] = useState(false);
+  const current = entries.find((e) => e.id === active); // undefined above the first heading
+  return (
+    <Collapsible.Root
+      open={open}
+      onOpenChange={setOpen}
+      className="sticky top-0 z-10 -mx-5 border-b border-rule bg-paper px-5 xl:hidden"
+    >
+      {/* renders a <button> with aria-expanded, aria-controls and data-state="open|closed" */}
+      <Collapsible.Trigger className="group flex w-full items-center gap-3 py-3 text-left text-sm">
+        <span className="shrink-0 text-muted">Содержание</span>
+        <span className="truncate text-ink">{current?.title}</span>
+        {/* group-data-[state=open]: → rotate when the `group` ancestor (the button) has data-state="open" */}
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          className="ml-auto shrink-0 self-center text-muted transition-transform group-data-[state=open]:rotate-180"
+        >
+          <path
+            d="m6 9 6 6 6-6"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          />
+        </svg>
+      </Collapsible.Trigger>
+      {/* not rendered at all while closed; crawlers still get the links from the desktop list above */}
+      <Collapsible.Content
+        className="absolute inset-x-0 top-full max-h-[70dvh] overflow-y-auto border-b border-rule bg-paper px-5 pt-2 pb-4"
+        onClick={() => setOpen(false)}
+      >
+        <Contents entries={entries} active={active} />
+      </Collapsible.Content>
+    </Collapsible.Root>
   );
 }
