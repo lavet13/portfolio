@@ -149,7 +149,7 @@
 
   /* the converted реферат (src/content/referat.html) */
   .prose-ru :is(h2, h3)[id] {
-    scroll-margin-top: 2.5rem; /* a jump from the contents list stops just below the top edge */
+    @apply scroll-mt-16 xl:scroll-mt-10; /* below xl the sticky section bar covers the top 46px */
   }
 
   /* a heading links to itself; it keeps looking like a heading, with a "#" as the hint */
