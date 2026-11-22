@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Fill } from "../../components/fill";
 import { headFor, pages, person } from "../../content/site";
 import { useLayoutEffect, useRef, useState, type MouseEvent } from "react";
-import { Collapsible } from "radix-ui";
+import * as Disclosure from "../../components/disclosure";
 
 export const Route = createFileRoute("/diss/")({
   head: () => headFor("/diss/"),
@@ -304,13 +304,13 @@ function SectionBar({
   const [open, setOpen] = useState(false);
   const current = entries.find((e) => e.id === active); // undefined above the first heading
   return (
-    <Collapsible.Root
+    <Disclosure.Root
       open={open}
       onOpenChange={setOpen}
       className="sticky top-0 z-10 -mx-5 border-b border-rule bg-paper px-5 xl:hidden"
     >
       {/* renders a <button> with aria-expanded, aria-controls and data-state="open|closed" */}
-      <Collapsible.Trigger className="group flex w-full items-center gap-3 py-3 text-left text-sm">
+      <Disclosure.Trigger className="group flex w-full items-center gap-3 py-3 text-left text-sm">
         <span className="shrink-0 text-muted">Содержание</span>
         <span className="truncate text-ink">{current?.title}</span>
         {/* group-data-[state=open]: → rotate when the `group` ancestor (the button) has data-state="open" */}
@@ -328,14 +328,14 @@ function SectionBar({
             strokeWidth="2"
           />
         </svg>
-      </Collapsible.Trigger>
+      </Disclosure.Trigger>
       {/* not rendered at all while closed; crawlers still get the links from the desktop list above */}
-      <Collapsible.Content
+      <Disclosure.Content
         className="absolute inset-x-0 top-full max-h-[70dvh] overflow-y-auto border-b border-rule bg-paper px-5 pt-2 pb-4"
         onClick={() => setOpen(false)}
       >
         <Contents entries={entries} active={active} />
-      </Collapsible.Content>
-    </Collapsible.Root>
+      </Disclosure.Content>
+    </Disclosure.Root>
   );
 }
