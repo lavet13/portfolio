@@ -2,14 +2,17 @@ import {
   Context,
   composeEventHandlers,
   useControllableState,
+  DismissableLayer,
 } from "radix-ui/internal";
 import { Slot } from "radix-ui/slot";
-import { useId, type FC } from "react";
+import { useId, useState, type FC } from "react";
 
 type DisclosureContextValue = {
   open: boolean;
   onOpenChange(open: boolean): void;
   contentId: string; // useId(): links Trigger's aria-controls to Content's id
+  trigger: HTMLButtonElement | null;
+  onTriggerChange(trigger: HTMLButtonElement | null): void;
 };
 
 const DISCLOSURE_NAME = "Disclosure";
@@ -25,6 +28,7 @@ type DisclosureRootProps = {
 
 const DisclosureRoot: FC<DisclosureRootProps> = (props) => {
   const { open: openProp, defaultOpen, onOpenChange, ...rootProps } = props;
+  const [trigger, setTrigger] = useState<HTMLButtonElement | null>(null);
   const contentId = useId();
   const [open, setOpen] = useControllableState({
     defaultProp: defaultOpen ?? false,
@@ -38,6 +42,8 @@ const DisclosureRoot: FC<DisclosureRootProps> = (props) => {
       open={open}
       onOpenChange={setOpen}
       contentId={contentId}
+      trigger={trigger}
+      onTriggerChange={setTrigger}
     >
       <div data-state={open ? "open" : "closed"} {...rootProps} />
     </DisclosureProvider>
@@ -52,18 +58,18 @@ type DisclosureTriggerProps = {
 
 const DisclosureTrigger: FC<DisclosureTriggerProps> = (props) => {
   const { asChild = false, onClick, ...buttonProps } = props;
-  const context = useDisclosureContext(DISCLOSURE_TRIGGER_NAME);
+  const { open, contentId, onOpenChange, onTriggerChange } =
+    useDisclosureContext(DISCLOSURE_TRIGGER_NAME);
   const Comp = asChild ? Slot : "button";
 
   return (
     <Comp
-      data-state={context.open ? "open" : "closed"}
+      ref={onTriggerChange}
+      data-state={open ? "open" : "closed"}
       type={asChild ? undefined : "button"}
-      aria-expanded={context.open}
-      aria-controls={context.contentId}
-      onClick={composeEventHandlers(onClick, () =>
-        context.onOpenChange(!context.open),
-      )}
+      aria-expanded={open}
+      aria-controls={contentId}
+      onClick={composeEventHandlers(onClick, () => onOpenChange(!open))}
       {...buttonProps}
     />
   );
@@ -73,14 +79,22 @@ DisclosureTrigger.displayName = DISCLOSURE_TRIGGER_NAME;
 const DISCLOSURE_CONTENT_NAME = "DisclosureContent";
 type DisclosureContentProps = React.ComponentProps<"div">;
 const DisclosureContent: FC<DisclosureContentProps> = (props) => {
-  const context = useDisclosureContext(DISCLOSURE_CONTENT_NAME);
+  const { open, contentId, trigger, onOpenChange } = useDisclosureContext(
+    DISCLOSURE_CONTENT_NAME,
+  );
 
-  if (!context.open) return null;
+  if (!open) return null;
 
   return (
-    <div
-      data-state={context.open ? "open" : "closed"}
-      id={context.contentId}
+    <DismissableLayer.Root
+      data-state={open ? "open" : "closed"}
+      id={contentId}
+      onInteractOutside={(event) => {
+        // the trigger toggles on its own click; don't also dismiss on its pointerdown
+        if (event.target instanceof Node && trigger?.contains(event.target))
+          event.preventDefault();
+      }}
+      onDismiss={() => onOpenChange(false)}
       {...props}
     />
   );
