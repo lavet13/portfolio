@@ -332,7 +332,11 @@ function SectionBar({
       {/* not rendered at all while closed; crawlers still get the links from the desktop list above */}
       <Disclosure.Content
         className="absolute inset-x-0 top-full max-h-[70dvh] overflow-y-auto border-b border-rule bg-paper px-5 pt-2 pb-4"
-        onClick={() => setOpen(false)}
+        onClick={(e) => {
+          // close only when a link was hit; a miss on the panel's background keeps the list open
+          if (e.target instanceof Element && e.target.closest("a"))
+            setOpen(false);
+        }}
       >
         <Contents entries={entries} active={active} />
       </Disclosure.Content>
