@@ -22,17 +22,10 @@ export const projects: Project[] = [
     stack: "PHP, MySQL, Node.js, Zod",
   },
   {
-    name: "twitch-dl-live",
-    status: "учебный",
-    what: "Следит за трансляциями на Twitch и записывает их, как только стрим начинается. Первый проект на Python.",
-    stack: "Python",
-    href: "https://github.com/lavet13/twitch-dl-live",
-  },
-  {
     name: "Этот сайт",
     status: "открытый код",
-    what: "Каждая страница заранее собрана в статический HTML, поэтому сайт открывается на любом сервере и даже с диска, а React делает переходы мгновенными.",
-    stack: "Vite, React, TanStack Router, Tailwind, Motion",
+    what: "Каждая страница заранее собрана в статический HTML: поисковики и браузер без JavaScript получают готовый текст, а React делает переходы мгновенными.",
+    stack: "Vite, React, TanStack Router, Tailwind CSS, View Transitions API",
     href: "https://github.com/lavet13/portfolio",
   },
 ];

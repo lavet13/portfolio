@@ -5,11 +5,15 @@
  */
 export const about = {
   /** Home page, after "Магистрант ДонНТУ." */
-  intro: "Пишу на TypeScript и поддерживаю в продакшене Telegram-бот и веб-приложение службы доставки «Наша Почта».",
+  intro:
+    "Пишу на TypeScript и поддерживаю в продакшене Telegram-бот и веб-приложение службы доставки «Наша Почта».",
   /** One sentence for the home page's meta description. */
-  thesisSummary: "Тема магистерской работы — разработка REST API на примере сервиса отслеживания грузов.",
+  thesisSummary:
+    "Тема магистерской работы — модернизация информационной системы службы доставки путём поэтапной миграции на REST API.",
   /** The /ind/ page's meta description. */
-  projectsDescription: "Индивидуальный раздел: проекты в продакшене — Telegram-бот и веб-приложение службы доставки, миграция legacy PHP на Node.js.",
+  projectsDescription:
+    "Индивидуальный раздел: проекты в продакшене — Telegram-бот и веб-приложение службы доставки, миграция legacy PHP на Node.js.",
   /** /bio/, "Самообразование". [[…]] parts render as placeholders. */
-  selfStudy: "JavaScript и TypeScript изучил самостоятельно, на реальных задачах: сначала поддержка legacy-кода на PHP, затем перенос форм заказа на Node.js и разработка Telegram-бота. [[Курсы, сертификаты — если есть]]",
+  selfStudy:
+    "JavaScript и TypeScript изучил самостоятельно, на реальных задачах: сначала поддержка legacy-кода на PHP, затем перенос форм заказа на Node.js и разработка Telegram-бота. [[Курсы, сертификаты — если есть]]",
 };
