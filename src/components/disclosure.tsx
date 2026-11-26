@@ -5,7 +5,7 @@ import {
   DismissableLayer,
 } from "radix-ui/internal";
 import { Slot } from "radix-ui/slot";
-import { useId, useState, type FC } from "react";
+import { useId, useState, type ComponentProps, type FC } from "react";
 
 type DisclosureContextValue = {
   open: boolean;
@@ -77,11 +77,15 @@ const DisclosureTrigger: FC<DisclosureTriggerProps> = (props) => {
 DisclosureTrigger.displayName = DISCLOSURE_TRIGGER_NAME;
 
 const DISCLOSURE_CONTENT_NAME = "DisclosureContent";
-type DisclosureContentProps = React.ComponentProps<"div">;
+type DisclosureContentProps = Omit<
+  ComponentProps<typeof DismissableLayer.Root>,
+  "onDismiss"
+>;
 const DisclosureContent: FC<DisclosureContentProps> = (props) => {
   const { open, contentId, trigger, onOpenChange } = useDisclosureContext(
     DISCLOSURE_CONTENT_NAME,
   );
+  const { onInteractOutside, ...contentProps } = props;
 
   if (!open) return null;
 
@@ -89,13 +93,13 @@ const DisclosureContent: FC<DisclosureContentProps> = (props) => {
     <DismissableLayer.Root
       data-state={open ? "open" : "closed"}
       id={contentId}
-      onInteractOutside={(event) => {
+      onInteractOutside={composeEventHandlers(onInteractOutside, (event) => {
         // the trigger toggles on its own click; don't also dismiss on its pointerdown
         if (event.target instanceof Node && trigger?.contains(event.target))
           event.preventDefault();
-      }}
+      })}
       onDismiss={() => onOpenChange(false)}
-      {...props}
+      {...contentProps}
     />
   );
 };
