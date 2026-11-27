@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "yarn photo && vite",
     "diss": "node scripts/docx-to-html.ts src/content/referat.docx src/content/referat.html",
     "build": "yarn diss && yarn photo && vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs && tsc -b",
     "photo": "node scripts/photo.ts",
