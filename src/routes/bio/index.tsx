@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Fill } from "../../components/fill";
 import { headFor, pages } from "../../content/site";
 import { education } from "../../content/education";
-import { about } from "../../content/about";
+import { cn } from "../../lib/utils";
+import { experience } from "../../content/experience";
 
 export const Route = createFileRoute("/bio/")({
   head: () => headFor("/bio/"),
@@ -16,33 +17,49 @@ function EducationPage() {
         {pages["/bio/"].label}
       </h1>
 
-      <ol className="mt-12 max-w-3xl">
-        {education.map((item) => (
-          <li
-            key={item.place}
-            className="grid gap-x-10 gap-y-1 border-t border-rule py-6 sm:grid-cols-[10rem_1fr]"
-          >
-            <p className="font-mono text-sm text-muted">
-              <Fill>{item.years}</Fill>
-            </p>
-            <div>
-              <h2 className="text-lg font-semibold">
-                <Fill>{item.place}</Fill>
-              </h2>
-              <p className="mt-1 text-muted">
-                <Fill>{item.note}</Fill>
-              </p>
-            </div>
-          </li>
-        ))}
-      </ol>
+      <Timeline items={education} className="mt-12" />
 
-      <section className="prose-ru mt-16">
-        <h2>Самообразование</h2>
-        <p>
-          <Fill>{about.selfStudy}</Fill>
-        </p>
+      <section className="mt-16">
+        <h2 className="text-xl font-semibold">Опыт работы</h2>
+        <Timeline items={experience} className="mt-6" />
       </section>
     </>
+  );
+}
+
+type TimelineItem = {
+  years: string;
+  place: string;
+  note: string;
+};
+
+function Timeline({
+  items,
+  className,
+}: {
+  items: TimelineItem[];
+  className?: string;
+}) {
+  return (
+    <ol className={cn("max-w-3xl", className)}>
+      {items.map((item) => (
+        <li
+          key={item.place}
+          className="grid gap-x-10 gap-y-1 border-t border-rule py-6 sm:grid-cols-[10rem_1fr]"
+        >
+          <p className="font-mono text-sm text-muted">
+            <Fill>{item.years}</Fill>
+          </p>
+          <div>
+            <h2 className="text-lg font-semibold">
+              <Fill>{item.place}</Fill>
+            </h2>
+            <p className="mt-1 text-muted">
+              <Fill>{item.note}</Fill>
+            </p>
+          </div>
+        </li>
+      ))}
+    </ol>
   );
 }
