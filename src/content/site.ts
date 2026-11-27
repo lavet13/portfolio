@@ -35,9 +35,9 @@ export const pages = {
   },
   "/bio/": {
     endpoint: "/bio/",
-    label: "Образование",
-    title: `Образование — ${shortName}`,
-    description: `Образование и курсы: школа, университет, магистратура ${person.universityShort} (группа ${person.group}).`,
+    label: "Биография",
+    title: `Биография — ${shortName}`,
+    description: `Образование и опыт работы: школа, университет, магистратура ${person.universityShort} (группа ${person.group}).`,
   },
   "/diss/": {
     endpoint: "/diss/",
@@ -56,8 +56,7 @@ export const pages = {
     endpoint: "/links/",
     label: "Ссылки",
     title: `Ссылки — ${shortName}`,
-    description:
-      "[[Какие ресурсы собраны на этой странице — одной фразой]]",
+    description: "[[Какие ресурсы собраны на этой странице — одной фразой]]",
   },
   "/ind/": {
     endpoint: "/ind/",
