@@ -4,4 +4,4 @@
  * public/photo.webp, and this becomes "./photo.webp". Not an import: an imported asset gets an
  * absolute /assets/… URL in the prerendered page, which breaks under a sub-path (/portfolio/).
  */
-export const photo: string | undefined = undefined;
+export const photo: string | undefined = "./photo.webp";
