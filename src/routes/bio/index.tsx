@@ -7,10 +7,10 @@ import { experience } from "../../content/experience";
 
 export const Route = createFileRoute("/bio/")({
   head: () => headFor("/bio/"),
-  component: EducationPage,
+  component: BiographyPage,
 });
 
-function EducationPage() {
+function BiographyPage() {
   return (
     <>
       <h1 className="text-3xl font-bold tracking-tight">

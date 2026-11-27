@@ -36,9 +36,9 @@ export const pages = {
   },
   "/bio/": {
     endpoint: "/bio/",
-    label: "Образование",
-    title: `Образование — ${shortName}`,
-    description: `Образование и курсы: школа, университет, магистратура ${person.universityShort} (группа ${person.group}).`,
+    label: "Биография",
+    title: `Биография — ${shortName}`,
+    description: `Образование и опыт работы: школа, университет, магистратура ${person.universityShort} (группа ${person.group}).`,
   },
   "/diss/": {
     endpoint: "/diss/",
